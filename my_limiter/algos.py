@@ -9,7 +9,7 @@ class TooManyRequests(Exception):
     pass
 
 
-def token_bucket(ip: str):
+def token_bucket(ip: str) -> str:
     """
     Tokens are put in the bucket at preset rates periodically. 
     Once the bucket is full, no more tokens are added. 
@@ -17,17 +17,22 @@ def token_bucket(ip: str):
     """
     REFILL_EVERY_SECONDS = TIME_INTERVAL_SECONDS
     NUM_TOKENS_TO_REFILL = 4
-    MAX_CAPACITY = 4
+    MAX_CAPACITY = 8
 
     entry = TOKEN_BUCKET.get(ip)
 
     if entry is None:
-        TOKEN_BUCKET[ip] = {'tokens': 4, 'last_refilled': dt.datetime.now().timestamp()}
+        TOKEN_BUCKET[ip] = {'tokens': MAX_CAPACITY, 'last_refilled': dt.datetime.now().timestamp()}
     else:
-        if dt.datetime.now().timestamp() >= entry['last_refilled'] + REFILL_EVERY_SECONDS:
+        last_refilled = entry['last_refilled']
+        now = dt.datetime.now().timestamp() 
+        if now >= last_refilled + REFILL_EVERY_SECONDS:
+            num_tokens_to_refill = int((now - last_refilled) // REFILL_EVERY_SECONDS * NUM_TOKENS_TO_REFILL)
             entry['last_refilled'] = dt.datetime.now().timestamp()
-            entry['tokens'] = min(entry['tokens'] + NUM_TOKENS_TO_REFILL, MAX_CAPACITY)
+            entry['tokens'] = min(entry['tokens'] + num_tokens_to_refill, MAX_CAPACITY)
+
     left = TOKEN_BUCKET[ip]['tokens']
     if left == 0:
         raise TooManyRequests
+
     TOKEN_BUCKET[ip]['tokens'] -= 1
