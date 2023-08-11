@@ -16,7 +16,7 @@ REFILL_EVERY_SECONDS = 15
 NUM_TOKENS_TO_REFILL = 4
 
 
-def get_entry_from_token_bucket(identifier: str) -> dict | None:
+def get_entry_from_token_bucket_in_memory(identifier: str) -> dict | None:
     """
     This is implemented independently in order to decouple it from its caller.
     Here it is initially implemented in-memory, but for scalability we'd
