@@ -33,8 +33,6 @@ def leaking_bucket_enqueue(identifier: str, data: str) -> None:
 
     Requests are pulled from the queue and processed at regular intervals in
     `leaking_bucket_dequeue`
-    TODO: implement `leaking_bucket_dequeue`
-      - [ ] done
     """
     store_name = f"{STORE_NAME_PREFIX_LEAKING_BUCKET}:{identifier}"
 
@@ -89,7 +87,7 @@ def get_entry_from_token_bucket(identifier: str) -> dict | None:
     return TOKEN_BUCKET.get(identifier)
 
 
-def token_bucket(identifier: str) -> str:
+def token_bucket_in_memory_lazy_refill(identifier: str) -> str:
     """
     Tokens are put in the bucket at preset rates periodically.
     Once the bucket is full, no more tokens are added.

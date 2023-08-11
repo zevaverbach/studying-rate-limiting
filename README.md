@@ -10,8 +10,8 @@ Over a year ago (early 2022) I did a job search, and some of the interview proce
 
 - [ ] implement token bucket
   - [ ] in-app
-    - [x] in-memory
-    - [ ] redis
+    - [x] in-memory, lazy refill
+    - [ ] redis, process to refill
 - [ ] implement leaky bucket
   - in-app
     - [x] redis
