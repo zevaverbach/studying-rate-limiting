@@ -40,6 +40,7 @@ def before_request():
     except algos.TooManyRequests:
         return f.abort(429)
 
-@application.route('/')
+
+@application.route("/")
 def home():
-    return '<!doctype html><title>Hello</title><h1>Hello</h1>'
+    return "<!doctype html><title>Hello</title><h1>Hello</h1>"
