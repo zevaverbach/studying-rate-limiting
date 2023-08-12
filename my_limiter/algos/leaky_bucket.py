@@ -2,12 +2,10 @@ import datetime as dt
 
 import redis
 
+from .exceptions import TooManyRequests
 
 r = redis.Redis()
 
-
-class TooManyRequests(Exception):
-    pass
 
 
 MAX_CAPACITY = 8
@@ -17,7 +15,7 @@ RUN_LEAKING_BUCKET_TASKS_EVERY_X_SECONDS = 15
 NUM_TASKS_TO_RUN_FOR_EACH_USER_AT_INTERVAL = 2
 
 
-def leaking_bucket_enqueue(identifier: str, data: str) -> None:
+def leaking_bucket_enqueue(identifier: str, data: str = "") -> None:
     """
     When a request arrives, the system checks if the queue for this particular
     `identifier` is full. If it is not full, the request is added to the queue.

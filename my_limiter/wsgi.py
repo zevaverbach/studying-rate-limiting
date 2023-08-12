@@ -6,7 +6,7 @@ from . import algos
 application = f.Flask(__name__)
 
 
-increment_requests_func = algos.token_bucket_in_memory_lazy_refill
+increment_requests_func = algos.leaking_bucket_enqueue
 
 
 @application.before_request

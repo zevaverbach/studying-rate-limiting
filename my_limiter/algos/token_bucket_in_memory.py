@@ -2,12 +2,10 @@ import datetime as dt
 
 import redis
 
+from .exceptions import TooManyRequests
 
 r = redis.Redis()
 
-
-class TooManyRequests(Exception):
-    pass
 
 
 TOKEN_BUCKET = {}
@@ -20,7 +18,7 @@ def get_entry_from_token_bucket_in_memory(identifier: str) -> dict | None:
     """
     This is implemented independently in order to decouple it from its caller.
     Here it is initially implemented in-memory, but for scalability we'd
-    want to use something more long-lived.
+    want to use something more durable.
     """
     return TOKEN_BUCKET.get(identifier)
 
@@ -34,7 +32,7 @@ def token_bucket_in_memory_lazy_refill(identifier: str) -> str:
     To be explicit, there is a token bucket for every `identifier`,
     aka every user/IP
     """
-    entry = get_entry_from_token_bucket(identifier)
+    entry = get_entry_from_token_bucket_in_memory(identifier)
 
     if entry is None:
         TOKEN_BUCKET[identifier] = {
